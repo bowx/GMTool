@@ -1,0 +1,3 @@
+<div class="list-group main-nav" ng-controller="navCrl" >
+	<a type="button" class="list-group-item "  ng-repeat="page in data" href="{{page.url}}" ng-class="setActive(page.url) ? 'active' : ''" >{{page.name}}</a>
+</div>

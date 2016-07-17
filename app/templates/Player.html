@@ -1,0 +1,84 @@
+<div class="panel panel-default">
+<div  class="panel-body">
+
+	<nav class="navbar navbar-default player-search">
+		 <div class="container-fluid">
+			<div class="navbar-header">
+			</div>
+			 <div class="collapse navbar-collapse">
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group form-group-sm">
+					  <label for="servers">服务器</label>
+					  <input id="servers" type="text" class="form-control input-sm" placeholder="服务器" ng-model="searchState.server" >
+					</div>
+					<div class="form-group form-group-sm">
+					  <label for="levelScope">等级</label>
+					  <div id="levelScope" class="input-group">
+					  <input id="lowLeveal" type="number" class="form-control input-sm col-xs-1" placeholder="from" ng-model="searchState.fromLevel" >
+					  <span class="input-group-btn" >~</span>
+					  <input id="heighLeveal" type="number" class="form-control input-sm col-xs-1" placeholder="to" ng-model="searchState.toLevel" >
+					  </div>
+					</div>
+					<div class="form-group form-group-sm">
+						<div class="input-group">
+							<input id="searchKey" type="text" class="form-control input-sm" placeholder="输入搜索内容" ng-model="searchState.key" >
+							<div class="input-group-btn">
+								<button type="button" class="btn btn-default btn-sm" ng-click="doSearch()">{{searchState.typeName}}</button>
+								<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+								<ul class="dropdown-menu dropdown-menu-right">
+								  <li><a href="" ng-click="searchTypeChange('id','搜索ID')">搜索ID</a></li>
+								  <li><a href="" ng-click="searchTypeChange('opid','搜索运营ID')">搜索运营ID</a></li>
+								  <li><a href="" ng-click="searchTypeChange('name','搜索名称')">搜索名称</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</form>
+			 </div	>
+		 </div>
+	</nav>
+
+</div>
+<table class="table table-hover table-condensed small" ng-hide="loadFlg">
+  <thead >
+	<th>ID</th>
+	<th>运营ID</th>
+	<th>大区</th>
+	<th>状态</th>
+	<th>名称</th>
+	<th>等级</th>
+	<th>家族</th>
+	<th>在线</th>
+	<th>装备</th>
+	<th>禁言</th>
+  </thead>
+  <tbody>
+	<tr ng-repeat="player in players" >
+		<td title="{{player.id}}">{{ellipsisID(player.id)}}</td>
+		<td title="{{player.opid}}">{{ellipsisID(player.opid)}}</td>
+		<td>{{player.district}}</td>
+		<td>
+			<div class="btn-group" role="status" ng-switch on="player.status">
+			<div class="btn btn-xs btn-label" ng-class="player.status? 'btn-danger' : 'btn-success'">{{getStatus(player.status)}}</div>
+			<button type="button" class="btn btn-xs btn-danger" ng-switch-when="0" title="封禁" ng-click="openBlockConfirmModal(player.id)" > <span class="glyphicon glyphicon-ban-circle"></span> </button>
+			<button type="button" class="btn btn-xs btn-danger" ng-switch-when="2" title="封禁" ng-click="openBlockConfirmModal(player.id)"><span class="glyphicon glyphicon-ban-circle"></span> </button>
+			<button type="button" class="btn btn-xs btn-success" ng-switch-when="1" title="解封"><span class="glyphicon glyphicon-ok-circle"></span> </button>
+			</div>
+		</td>
+		<td>{{player.name}}</td>
+		<td>{{player.level}}</td>
+		<td>{{player.family}}</td>
+		<td>
+			<div class="btn-group" role="online" ng-switch on="player.isOnline">
+				<button type="button" class="btn btn-xs  btn-label" ng-class="player.isOnline == 'True' ? 'btn-success' : ''" title="{{player.isOnline == 'True' ? ' Online' : ' Offline'}}"> <span class="glyphicon glyphicon-user"></span></button>
+				<button type="button" class="btn btn-xs btn-danger" ng-switch-when="True" title="Kick" ng-click="openKickConfirmModel(player.id)"> <span class="glyphicon glyphicon-log-out"></span></button>
+			</div>
+		</td>
+		<td><button type="button" class="btn btn-xs btn-success" ng-click="openEquConfirmModel(player.id)"><span class="glyphicon glyphicon-search"> </span></button></td>
+		<td><button type="button" class="btn btn-xs btn-danger" ng-click="openBanConfirmModel(player.id)"><span class="glyphicon glyphicon-volume-off"> </span></button></td>
+	</tr>
+  </tbody>
+</table>
+<div class="loading center-block text-center well" ng-show="loadFlg" ><img src="/images/loading.svg"/> Loading</div>
+</div>
+<div ng-include="'templates/ConfirmModal.html'"></div>
